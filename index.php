@@ -17,19 +17,48 @@ if($timestamp === false) {
 }
 
 // 今日の日付
-$today = data('Y-m-j');
+$today = date('Y-m-j');
 
 // カレンダーのタイトルを作成
 $html_title = date('Y年n月', $timestamp);
 
 // 前月・次月の年月を取得
 $prev = date('Y-m', strtotime('-1 month', $timestamp));
+$next = date('Y-m', strtotime('+1 month', $timestamp));
 
 // 該当月の日数を取得
 $day_count = date('t', $timestamp);
 
 // １日が何曜日か
 $youbi = date('w', $timestamp);
+
+// カレンダー作成の準備
+$week = [];
+$week = '';
+
+// 第一週目：空のセルを追加
+$week .= str_repeat('<td></td>', $youbi);
+
+for($day = 1; $day <= $day_count; $day++, $youbi++) {
+    $date = $ym . '-' . $day;
+    if($today == $date) {
+        $week .= '<td class="today">' . $day;
+    } else {
+        $week .= '<td>' . $day;
+    }
+    $week .= '</td>';
+
+    // 週替わり、または月終わりの場合
+    if($youbi % 7 == 6 || $day == $day_count) {
+        if($day == $day_count) {
+            // 月の最終日の場合、空セルを追加
+            $week .= str_repeat('<td></td>', 6 - $youbi % 7);
+        }
+        $weeks[] = '<tr>' . $week . '</tr>';
+        $week = '';
+    }
+}
+
 
 
 
@@ -70,62 +99,22 @@ $youbi = date('w', $timestamp);
 </head>
 <body>
     <div class="container mt-5">
-        <h3 class="mb-4"><a href="#">&lt;</a><span class="mx-3">２０２３年１１月</span><a href="">&gt</a></h3>
+        <h3 class="mb-4"><a href="?ym=<?= $prev ?>">&lt;</a><span class="mx-3"><?= $html_title ?></span><a href="?ym=<?= $next ?>">&gt</a></h3>
         <table class="table table-bordered">
             <tr>
+                <th>日</th>
                 <th>月</th>
                 <th>火</th>
                 <th>水</th>
                 <th>木</th>
                 <th>金</th>
                 <th>土</th>
-                <th>日</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td class="today">16</td>
-                <td>17</td>
-                <td>18</td>
-            </tr>
-            <tr>
-                <td>19</td>
-                <td>20</td>
-                <td>21</td>
-                <td>22</td>
-                <td>23</td>
-                <td>24</td>
-                <td>25</td>
-            </tr>
-            <tr>
-                <td>26</td>
-                <td>27</td>
-                <td>28</td>
-                <td>29</td>
-                <td>30</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <?php
+            foreach($weeks as $week) {
+                echo $week;
+            }
+            ?>
         </table>
     </div>
 </body>
