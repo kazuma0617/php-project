@@ -63,11 +63,8 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
 
 
 
-
-
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,7 +96,7 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
 </head>
 <body>
     <div class="container mt-5">
-        <h3 class="mb-4"><a href="?ym=<?= $prev ?>">&lt;</a><span class="mx-3"><?= $html_title ?></span><a href="?ym=<?= $next ?>">&gt</a></h3>
+        <h3 class="mb-4"><a href="?ym=<?= $prev ?>">&lt;</a><span class="mx-3"><?= $html_title ?></span><a href="?ym=<?= $next ?>">&gt;</a></h3>
         <table class="table table-bordered">
             <tr>
                 <th>日</th>
