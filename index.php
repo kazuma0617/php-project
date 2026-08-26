@@ -2,6 +2,23 @@
 // タイムゾーンを設定
 date_default_timezone_set('Asia/Tokyo');
 
+// ==========================================
+// 1. データベース接続設定 (PDO)
+// ==========================================
+$db_host = 'localhost';
+$db_name = 'schedule_db';
+$db_user = 'root';
+$db_pass = '';
+
+try {
+    $pdo = new PDO("mysql:host={$db_host};dbname={$db_name};charset=utf8mb4", $db_user, $db_pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch(PDOException $e) {
+    exit('データベース接続エラー：' . $e->getMessage());
+}
+
 // 前月・次月リンクが押された場合は、GETパラメーターから年月を取得
 if(isset($_GET['ym'])) {
     $ym = $_GET['ym'];
