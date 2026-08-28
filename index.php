@@ -84,12 +84,28 @@ $week = '';
 $week .= str_repeat('<td></td>', $youbi);
 
 for($day = 1; $day <= $day_count; $day++, $youbi++) {
-    $date = $ym . '-' . $day;
+    $date = sprintf('%s-%02d', $ym, $day);
+
+    // 今日の日付の場合、背景色をつける
     if($today == $date) {
-        $week .= '<td class="today">' . $day;
+        $week .= '<td class="today">';
     } else {
-        $week .= '<td>' . $day;
+        $week .= '<td>';
     }
+
+    // 予定の有無でリンク先を切り替える
+    if(isset($schedules[$date])) {
+        //　詳細画面へ遷移するリンク　＋　予定バッジ
+        $plan_text = htmlspecialchars($schedules[$date], ENT_QUOTES, 'UTF-8');
+        $week .= '<a href="detail.php?date=' . $date . '" class="day-bumber">' . $day . '</a>';
+        $week .= '<a href="detail.php?date=' . $date . '">';
+        $week .= '<div class="badge bg-primary d-block mt-1"' . $plan_text . '</dvi>';
+        $week .= '</a>';
+    } else {
+        // 追加画面へ遷移するリンク
+        $week .= '<a href="add.php?date=' . $date . '" class="day-number d-block h-100">' . $day . '</a>';  
+    }
+
     $week .= '</td>';
 
     // 週替わり、または月終わりの場合
@@ -127,46 +143,22 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
         td {
             height: 100px;
         }
+        td a {
+            color: black;
+        }
         .today {
             background: orange !important;
         }
-        th:nth-of-type(1), td:nth-of-type(1) {
+        th:nth-of-type(1), td:nth-of-type(1) a {
             color: red;
         }
-        th:nth-of-type(7), td:nth-of-type(7) {
+        th:nth-of-type(7), td:nth-of-type(7) a {
             color: blue;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <h2>来所予定表</h2>
-        <!-- 予定追加フォーム (POST送信) -->
-        <div class="card my-4 p-3 bg-light">
-            <h5>予定を追加する</h5>
-            <form action="" method="POST" class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="form-label">日付：</label>
-                    <input type="date" name="target_date" class="form-control" required>
-                </div>
-                <div class="col-auto">
-                    <label class="form-label">予定内容：</label>
-                    <select name="plan" class="form-select" required>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                    </select>
-                </div>
-                <div class="col-auto mt-4">
-                    <button type="submit" name="add_schedule" class="btn btn-primary">追加する</button>
-                </div>
-            </form>
-        </div>
-
-
-
-
         <h3 class="mb-4"><a href="?ym=<?= $prev ?>">&lt;</a><span class="mx-3"><?= $html_title ?></span><a href="?ym=<?= $next ?>">&gt;</a></h3>
         <table class="table table-bordered">
             <tr>
