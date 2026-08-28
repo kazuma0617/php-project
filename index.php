@@ -22,7 +22,7 @@ try {
 // ==========================================
 // 2. データの追加処理 (CREATE)
 // ==========================================
-if(isset($POST['add_schedule'])) {
+if(isset($_POST['add_schedule'])) {
     $target_date = $POST['target_date'];
     $plan = $POST['plan'];
 

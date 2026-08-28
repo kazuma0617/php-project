@@ -1,3 +1,20 @@
+<?php
+// タイムゾーンの設定
+date_default_timezone_set('Asia/Tokyo');
+
+// URLパラメータから日付を取得する
+if(isset($_GET['date'])) {
+    $date = $_GET['date'];
+} else {
+    // header('Location: index.php');
+    exit;
+}
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
