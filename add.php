@@ -10,6 +10,46 @@ if(isset($_GET['date'])) {
     exit;
 }
 
+// ==========================================
+// 1. データベース接続設定 (PDO)
+// ==========================================
+$db_host = 'localhost';
+$db_name = 'schedule_db';
+$db_user = 'root';
+$db_pass = '';
+
+try {
+    $pdo = new PDO("mysql:host={$db_host};dbname={$db_name};charset=utf8mb4", $db_user, $db_pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch(PDOException $e) {
+    exit('データベース接続エラー：' . $e->getMessage());
+}
+
+// 「登録する」ボタンが押された時の処理
+$error = '';
+if(isset($_POST['save'])) {
+    $plan = $_POST['plan'];
+
+    if(!empty($plan)) {
+        $sql = "INSERT INTO schedules (target_date, plan) VALUES (:target_date, :plan) ON DUPLICATE KEY UPDATE plan = :plan_update";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue('target_date', $date, PDO::PARAM_STR);
+        $stmt->bindValue('plan', $plan, PDO::PARAM_STR);
+        $stmt->bindValue('plan_update', $plan, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // 登録完了後、該当の月を開いた状態でカレンダーに戻る
+        $ym = date('Y-m', strtotime($date));
+        header("Location: index.php?ym={$ym}");
+        exit;
+    } else {
+        $error = '予定内容を選択してください';
+    }
+}
+
 
 
 ?>
