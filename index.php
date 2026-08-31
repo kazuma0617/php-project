@@ -19,32 +19,7 @@ try {
     exit('データベース接続エラー：' . $e->getMessage());
 }
 
-// ==========================================
-// 2. データの追加処理 (CREATE)
-// ==========================================
-if(isset($_POST['add_schedule'])) {
-    $target_date = $POST['target_date'];
-    $plan = $POST['plan'];
 
-    // 入力値が空でないか確認
-    if(!empty($target_date) && !empty($plan)) {
-        // SQL文を作成
-        $sql = "INSERT INTO schedules (target_date, plan) VALUES (:target_date, :plan) ON DUPLICATE KEY UPDATE plan = :plan_update";
-
-        // プリペアドステートメントを準備（SQLインジェクション対策）
-        $stmt = $pdo->prepare($sql);
-
-        // 値をバインドして実行
-        $stmt->bindValue(':target_date', $target_date, PDO::PARAM_STR);
-        $stmt->bindValue(':plan', $plan, PDO::PARAM_STR);
-        $stmt->bindValue(':plan_update', $plan, PDO::PARAM_STR);
-        $stmt->execute();
-
-        // フォーム再送信（F5での二重投稿）を防ぐために自分自身にリダイレクト
-        header('Location: ', $_SERVER['PHP_SELF']);
-        exit;
-    }
-}
 
 // 前月・次月リンクが押された場合は、GETパラメーターから年月を取得
 if(isset($_GET['ym'])) {
@@ -61,7 +36,7 @@ if($timestamp === false) {
 }
 
 // 今日の日付
-$today = date('Y-m-j');
+$today = date('Y-m-d');
 
 // カレンダーのタイトルを作成
 $html_title = date('Y年n月', $timestamp);
@@ -97,7 +72,7 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
     if(isset($schedules[$date])) {
         //　詳細画面へ遷移するリンク　＋　予定バッジ
         $plan_text = htmlspecialchars($schedules[$date], ENT_QUOTES, 'UTF-8');
-        $week .= '<a href="detail.php?date=' . $date . '" class="day-bumber">' . $day . '</a>';
+        $week .= '<a href="detail.php?date=' . $date . '" class="day-number">' . $day . '</a>';
         $week .= '<a href="detail.php?date=' . $date . '">';
         $week .= '<div class="badge bg-primary d-block mt-1"' . $plan_text . '</dvi>';
         $week .= '</a>';
