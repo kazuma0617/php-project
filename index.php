@@ -51,6 +51,21 @@ $day_count = date('t', $timestamp);
 // １日が何曜日か
 $youbi = date('w', $timestamp);
 
+// DBから該当月の予定データを取得する処理
+$start_date = $ym . '-01';
+$end_date = sprintf('%s-%02d', $ym, $day_count);
+
+$stmt = $pdo->prepare("SELECT target_date, plan FROM schedules WHERE target_date BETWEEN :start AND :end");
+$stmt->bindValue(':start', $start_date, PDO::PARAM_STR);
+$stmt->bindValue(':end', $end_date, PDO::PARAM_STR);
+$stmt->execute();
+$schedules_from_db = $stmt->fetchAll();
+
+$schedules = [];
+foreach($schedules_from_db as $row) {
+    $schedules[$row['target_date']] = $row['plan'];
+}
+
 // カレンダー作成の準備
 $week = [];
 $week = '';
@@ -74,7 +89,7 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
         $plan_text = htmlspecialchars($schedules[$date], ENT_QUOTES, 'UTF-8');
         $week .= '<a href="detail.php?date=' . $date . '" class="day-number">' . $day . '</a>';
         $week .= '<a href="detail.php?date=' . $date . '">';
-        $week .= '<div class="badge bg-primary d-block mt-1"' . $plan_text . '</dvi>';
+        $week .= '<div class="badge bg-success d-block mt-1">' . $plan_text . '</dvi>';
         $week .= '</a>';
     } else {
         // 追加画面へ遷移するリンク

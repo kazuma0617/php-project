@@ -77,10 +77,10 @@ if(isset($_POST['save'])) {
                     <select name="plan" class="form-select" required>
                         <option value="">選択してください</option>
                         <option value="A">A（ご飯あり１日）</option>
-                        <option value="A">B（ご飯あり午前）</option>
-                        <option value="A">C（ご飯あり午後）</option>
-                        <option value="A">D（ご飯なし午前）</option>
-                        <option value="A">E（ご飯なし午後）</option>
+                        <option value="B">B（ご飯あり午前）</option>
+                        <option value="C">C（ご飯あり午後）</option>
+                        <option value="D">D（ご飯なし午前）</option>
+                        <option value="E">E（ご飯なし午後）</option>
                     </select>
                 </div>
                 <div class="d-flex justify-content-between">
