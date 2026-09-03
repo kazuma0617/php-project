@@ -89,7 +89,7 @@ for($day = 1; $day <= $day_count; $day++, $youbi++) {
         $plan_text = htmlspecialchars($schedules[$date], ENT_QUOTES, 'UTF-8');
         $week .= '<a href="detail.php?date=' . $date . '" class="day-number">' . $day . '</a>';
         $week .= '<a href="detail.php?date=' . $date . '">';
-        $week .= '<div class="badge bg-success d-block mt-1">' . $plan_text . '</dvi>';
+        $week .= '<div class="badge bg-success d-block mt-1">' . $plan_text . '</div>';
         $week .= '</a>';
     } else {
         // 追加画面へ遷移するリンク
