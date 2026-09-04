@@ -38,9 +38,9 @@ if(isset($_POST['update'])) {
         $sql = "UPDATE schedules SET plan = :plan WHERE target_date = :target_date";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':plan', $plan, PDO::PARAM_STR);
-        $stmt->bindValue(':target_date', $date, PDO::PARM_STR);
+        $stmt->bindValue(':target_date', $date, PDO::PARAM_STR);
 
-        if(stmt->execute()) {
+        if($stmt->execute()) {
             // 更新成功後、カレンダー画面へ戻る
             header('Location: index.php?ym=' . substr($date, 0, 7));
             exit;
@@ -53,6 +53,24 @@ if(isset($_POST['update'])) {
 }
 
 // delete
+if(isset($_POST['delete'])) {
+    $sql = "DELETE FROM schedules WHERE target_date = :target_date";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':target_date', $date, PDO::PARAM_STR);
+
+    if($stmt->execute()) {
+        header('Location: index.php?ym=' . substr($date, 0, 7));
+        exit;
+    } else {
+        $error = '削除に失敗しました。';
+    }
+}
+
+// read
+$stmt = $pdo->prepare("SELECT plan FROM schedules WHERE target_date = :target_date");
+$stmt->bindValue(':target_date', $date, PDO::PARAM_STR);
+$stmt->execute();
+$schedule = $stmt->fetch();
 
 ?>
 
@@ -72,18 +90,25 @@ if(isset($_POST['update'])) {
                 <?php if ($error): ?>
                     <div class="alert alert-danger"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
                 <?php endif; ?>
-                <form medhod="POST">
+                <form method="POST">
                     <div class="mb-3">
                         <label class="form-label fw-bold">対象日</label>
                         <input type="text" class="form-control" value="<?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?>" readonlydisabled>
                     </div>
                     <div class="mb-4">
-
+                        <label for="plan" class="form-label fw-bold">予定の内容</label>
+                        <select name="plan" id="plan" class="form-select" required>
+                            <option value="A" <?= $schedule['plan'] == 'A' ? 'selected' : '' ?>>A（ご飯あり１日）</option>
+                            <option value="B" <?= $schedule['plan'] == 'B' ? 'selected' : '' ?>>B（ご飯あり午前）</option>
+                            <option value="C" <?= $schedule['plan'] == 'C' ? 'selected' : '' ?>>C（ご飯あり午後）</option>
+                            <option value="D" <?= $schedule['plan'] == 'D' ? 'selected' : '' ?>>D（ご飯なし午前）</option>
+                            <option value="E" <?= $schedule['plan'] == 'E' ? 'selected' : '' ?>>E（ご飯なし午後）</option>
+                        </select>
                     </div>
                     <div class="d-grid gap-2">
-                        <button>変更を保存する</button>
-                        <button>予定を削除する</button>
-                        <a href="">戻る</a>
+                        <button type="submit" name="update" class="btn btn-primary">変更を保存する</button>
+                        <button type="submit" name="delete" class="btn btn-outline-danger" onclick="return confirm('本当にこの予定を削除しますか？');">予定を削除する</button>
+                        <a href="index.php?ym=<?= substr($date, 0, 7) ?>" class="btn btn-secondary mt-2">戻る</a>
                     </div>
                 </form>
             </div>
