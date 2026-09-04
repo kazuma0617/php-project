@@ -60,10 +60,10 @@ if(isset($_POST['save'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>新規作成</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
-<body>
+<body class="bg-light">
     <div class="container mt-5" style="max-width: 500px;">
         <div class="card p-4 shadow-sm">
             <h3 class="mb-4">来所予定の追加</h3>
@@ -83,8 +83,9 @@ if(isset($_POST['save'])) {
                         <option value="E">E（ご飯なし午後）</option>
                     </select>
                 </div>
-                <div class="d-flex justify-content-between">
+                <div class="d-grid gap-2">
                     <button type="submit" name="save" class="btn btn-primary">登録する</button>
+                    <a href="index.php?ym=<?= substr($date, 0, 7) ?>" class="btn btn-secondary mt-2">戻る</a>
                 </div>
             </form>
         </div>

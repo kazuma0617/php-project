@@ -93,7 +93,7 @@ $schedule = $stmt->fetch();
                 <form method="POST">
                     <div class="mb-3">
                         <label class="form-label fw-bold">対象日</label>
-                        <input type="text" class="form-control" value="<?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?>" readonlydisabled>
+                        <input type="text" class="form-control" value="<?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?>" disabled>
                     </div>
                     <div class="mb-4">
                         <label for="plan" class="form-label fw-bold">予定の内容</label>
